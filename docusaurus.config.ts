@@ -4,6 +4,21 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+const SETTINGS = {
+  plugins: [
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "docs_main",
+        path: "docs_main",
+        routeBasePath: "docs_main",
+        sidebarPath: require.resolve("./sidebars.js"),
+      },
+    ],
+  ]
+}
+
+
 const config: Config = {
   title: 'My Site',
   tagline: 'Dinosaurs are cool',
@@ -13,7 +28,7 @@ const config: Config = {
   url: 'https://your-docusaurus-site.example.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/dev',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -64,6 +79,8 @@ const config: Config = {
     ],
   ],
 
+  plugins: SETTINGS.plugins,
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
@@ -81,6 +98,11 @@ const config: Config = {
           label: 'Tutorial',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
+        {
+          to: "/docs_main/overview",
+          label: "开发文档",
+          position: "left",
+        },
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',

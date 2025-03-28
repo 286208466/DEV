@@ -1,0 +1,38 @@
+判断设备横竖屏
+
+```css
+/* 横屏 */
+@media all and (orientation: landscape) {
+}
+/* 竖屏 */
+@media all and (orientation: portrait) {
+}
+```
+
+判断设备宽⾼
+
+```css
+/* 设备宽度⼤于 320px ⼩于 640px */
+@media all and (min-width: 320px) and (max-width: 640px) {
+}
+```
+
+判断设备像素⽐
+
+```css
+/* 设备像素⽐为 1 */
+@media only screen and (-webkit-min-device-pixel-ratio: 1),
+  only screen and (min-d
+evice-pixel-ratio: 1) {
+}
+/* 设备像素⽐为 1.5 */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+  only screen and (min
+-device-pixel-ratio: 1.5) {
+}
+/* 设备像素⽐为 2 */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min-d
+evice-pixel-ratio: 2) {
+}
+```

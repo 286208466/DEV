@@ -1,0 +1,93 @@
+```js
+/**
+ * 判断dom对象是否包含某个class
+ *
+ */
+export function hasClass(el, cName) {
+  return !!el.className.match(new RegExp("(\\s|^)" + cName + "(\\s|$)"));
+}
+
+/**
+ * 给dom对象添加某个class
+ *
+ */
+export function addClass(el, cName) {
+  if (!hasClass(el, cName)) {
+    el.className += " " + cName;
+  }
+}
+
+/**
+ * 删除dom对象的某个class
+ *
+ */
+export function removeClass(el, cName) {
+  if (hasClass(el, cName)) {
+    el.className = el.className.replace(
+      new RegExp("(\\s|^)" + cName + "(\\s|$)"),
+      " "
+    );
+  }
+}
+
+/**
+ * @param {HTMLElement} element
+ * @param {string} className
+ */
+export function toggleClass(element, className) {
+  if (!element || !className) {
+    return;
+  }
+  let classString = element.className;
+  const nameIndex = classString.indexOf(className);
+  if (nameIndex === -1) {
+    classString += "" + className;
+  } else {
+    classString =
+      classString.substr(0, nameIndex) +
+      classString.substr(nameIndex + className.length);
+  }
+  element.className = classString;
+}
+```
+
+```js
+const getClientHeight = () => {
+  let winHeight;
+  if (window.innerHeight) {
+    winHeight = window.innerHeight;
+  } else if (document.body && document.body.clientHeight) {
+    winHeight = document.body.clientHeight;
+  } else if (
+    document.documentElement &&
+    document.documentElement.clientHeight &&
+    document.documentElement.clientWidth
+  ) {
+    winHeight = document.documentElement.clientHeight;
+  }
+  return winHeight;
+};
+```
+
+### 获取 DOM 元素的 css 属性值
+
+```js
+const getDomStyle = (ele, cssAttr) => {
+  let style = null;
+  // IE浏览器下写法
+  style = ele.currentStyle[cssAttr];
+  // 非IE浏览器（如谷歌、oprea）下写法
+  style = getComputedStyle(ele, null)[cssAttr];
+  // 通过三元运算实现 兼容IE和非IE浏览器写法
+  style = ele.currentStyle
+    ? ele.currentStyle[cssAttr]
+    : getComputedStyle(ele, null)[cssAttr];
+  if (style === "auto") {
+    // 如果是span标签，获取到的宽度为'auto'
+    if (ele.getBoundingClientRect()) {
+      style = ele.getBoundingClientRect().width;
+    }
+  }
+  return style;
+};
+```

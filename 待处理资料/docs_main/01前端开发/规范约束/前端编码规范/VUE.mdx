@@ -1,0 +1,148 @@
+### 项目目录
+
+- 全局通用的组件放在 /src/components/ 下
+- 页面/视图放在 /src/pages/ 下
+- 全局公共指令、过滤器（多于三个文件以上引用）分别放在 src/ 目录下的 directives/、filters/
+- 当页面文件具有私有组件、指令、过滤器时，则建立一个与页面同名的目录，页面文件更名为 index.vue，然后在该目录下创建私有 ./components 等文件夹；
+
+```
+src/
+├── assets                         # 资源文件
+    ├── styles
+    ├── images
+    ├── files
+├── components                     # 全局通用组件
+├── directives                     # 全局公共指令
+├── filters                        # 全局公共过滤器
+├── layout                         # 布局
+├── mock                           # 模拟数据
+├── router                         # 路由
+├── store                          #
+├── utils                          # 方法工具库
+└── pages                          # 页面/视图
+    ├── login
+        ├── components             # 私有组件
+        ├── resources              # 私有资源
+        └── index.vue
+    └── profile
+        ├── components             # 私有组件
+        ├── resources              # 私有资源
+        └── index.vue
+```
+
+### 组件
+
+- 位于 components 文件夹下的基础组件,应该全部以一个特定的前缀开头，比如 Base、App 或 V
+
+```
+# 反例
+components/
+|- MyButton.vue
+|- VueTable.vue
+|- Icon.vue
+
+# 好例子
+components/
+|- BaseButton.vue
+|- BaseTable.vue
+|- BaseIcon.vue
+```
+
+- 位于 components 文件夹下的组件，该类组件只在某个父组件的场景下有意义，这层关系应该体现在其名字上。因为编辑器通常会按字母顺序组织文件，所以这样做可以把相关联的文件排在一起。
+
+```
+# 反例
+components/
+|- SearchSidebar.vue
+|- NavigationForSearchSidebar.vue
+
+# 好例子
+components/
+|- SearchSidebar.vue
+|- SearchSidebarNavigation.vue
+```
+
+- 组件名中的单词顺序
+
+:::tip
+组件名应该以高级别的 (通常是一般化描述的) 单词开头，以描述性的修饰词结尾
+:::
+
+```
+# 反例
+components/
+|- ClearSearchButton.vue
+|- ExcludeFromSearchInput.vue
+|- LaunchOnStartupCheckbox.vue
+|- RunSearchButton.vue
+|- SearchInput.vue
+|- TermsCheckbox.vue
+
+# 好例子
+components/
+|- SearchButtonClear.vue
+|- SearchButtonRun.vue
+|- SearchInputQuery.vue
+|- SearchInputExcludeGlob.vue
+|- SettingsCheckboxTerms.vue
+|- SettingsCheckboxLaunchOnStartup.vue
+```
+
+- 组件名应该倾向于完整单词而不是缩写，这样便于团队合作与后期维护
+
+```
+# 反例
+components/
+|- SdSettings.vue
+|- UProfOpts.vue
+
+好例子
+components/
+|- StudentDashboardSettings.vue
+|- UserProfileOptions.vue
+```
+
+### Vue 属性书写顺序
+
+```
+name
+components
+mixins
+props
+data
+watch
+computed
+[created,mounted,activited,update]  //生命周期
+methods
+```
+
+### 命名
+
+**method 方法命名**
+
+- 动宾短语（good：jumpPage、openCarInfoDialog）（bad：go、nextPage、show、open、login）
+- 尽量使用常用单词开头（例如 set、get、open、close、jump）
+- 方法函数使用小驼峰命名方式（good: getListData）（bad: get_list_data、getlistData）
+- DOM 事件使用 onXXX，处理函数使用 handleXXX，接口获取数据使用 fetchXXX, 提交数据使用 postXXX
+
+**常量**
+
+全部字母大写，使用下划线分隔
+
+### 注释
+
+- props 必须指定类型、必须加上注释表明其含义
+
+- data 中的参数必须加上注释表明其含义
+
+- 较难理解的地方或者逻辑复杂的业务代码中必须加上注释
+
+### 其他
+
+- 标签顺序保持一致
+
+```html
+<template></template>
+<script></script>
+<style></style>
+```

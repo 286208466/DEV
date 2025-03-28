@@ -1,0 +1,70 @@
+---
+title: 通用样式
+---
+
+### 浮动相关
+```css
+.clearfix:after {
+  clear: both;
+  content: "";
+  display: block;
+  height: 0;
+}
+/*
+.clearfix::after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: "";
+  clear: both;
+  height: 0;
+}
+*/
+.clearfix {
+  *zoom: 1;
+}
+.fr {
+  float: right;
+}
+.fl {
+  float: left;
+}
+```
+
+
+### 其他
+
+```css
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flexItem {
+  flex: 1;
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hide {
+  display: none 
+}
+[hidden] {
+  display: none !important;
+}
+.hidden {
+  visibility: hidden;
+}
+.show {
+  display: block;
+}
+
+i[class^="icon-"] {
+  display: inline-block;
+  vertical-align: middle;
+}
+```

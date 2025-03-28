@@ -1,0 +1,70 @@
+## 命名规则
+
+### 常见的命名方式
+
+- 下划线命名 my_first_name
+- 中划线命名 my-first-name
+- 小驼峰命名 myFirstName
+- 大驼峰命名 MyFirstElement
+
+### 项目命名
+
+全部采用小写方式， 以下划线分隔。
+
+只可由英文字母、数字、下划线组成，禁止包含特殊符号，如空格、%等
+
+例：`my_project_name`
+
+### 目录命名
+
+参照项目命名规则；
+
+有复数结构时，要采用复数命名法。
+
+例：scripts, styles, images, data_models
+
+### 文件命名
+
+参照项目命名规则。
+
+例：account_model.js
+
+:::tip
+不允许带有广告等英文单词，例如：ad、adv、adver、advertising，防止该模块被浏览器当成垃圾过滤掉
+:::
+
+### CSS, SCSS 文件命名
+
+参照项目命名规则。
+
+例：retina_sprites.scss
+
+### HTML 文件命名
+
+参照项目命名规则。
+
+例：error_report.html
+
+### 使用大驼峰命名方式的场景
+
+组件文件名
+
+```js
+PageLoading.jsx;
+Layout.vue;
+```
+
+组件函数名
+
+```js
+const PageLoading = () => {
+  return <></>;
+};
+<PageLoading></PageLoading>;
+```
+
+类名、构造函数
+
+```js
+class Map {}
+```

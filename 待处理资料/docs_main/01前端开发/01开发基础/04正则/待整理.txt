@@ -1,0 +1,50 @@
+
+### 其他
+
+```js
+
+
+// 验证用户密码："^[a-zA-Z]\w{5,17}$"正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。
+// 验证是否含有^%&'',;=?$\"等字符："[^%&'',;=?$\x22]+"。
+// 只能输入汉字："^[\u4e00-\u9fa5]{0,}$"
+// 验证Email地址："^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"。
+// 验证InternetURL："^http://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$"。
+// 验证电话号码："^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$"正确格式为："XXX-XXXXXXX"、"XXXX- XXXXXXXX"、"XXX-XXXXXXX"、"XXX-XXXXXXXX"、"XXXXXXX"和"XXXXXXXX"。
+
+
+// 验证用户密码："^[a-zA-Z]\w{5,17}$"正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。
+// 验证是否含有^%&'',;=?$\"等字符："[^%&'',;=?$\x22]+"。
+// 验证一年的12个月："^(0?[1-9]|1[0-2])$"正确格式为："01"～"09"和"1"～"12"。
+// 验证一个月的31天："^((0?[1-9])|((1|2)[0-9])|30|31)$"正确格式为；"01"～"09"和"1"～"31"。 匹配中文字符的正则表达式： [\u4e00-\u9fa5]
+
+/**
+ * 用正则表达式限制只能输入中文：
+ * onkeyup="value=value.replace(/[^\u4E00-\u9FA5]/g,'')"
+ * onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\u4E00-\u9FA5]/g,''))"
+ *
+ * */
+
+/**
+ * 用正则表达式限制只能输入全角字符：
+ * onkeyup="value=value.replace(/[^\uFF00-\uFFFF]/g,'')"
+ * onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\uFF00-\uFFFF]/g,''))"
+ *
+ * */
+
+/**
+ * 用正则表达式限制只能输入数字：
+ * onkeyup="value=value.replace(/[^\d]/g,'')"
+ * onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+ *
+ * */
+
+/**
+ * 用正则表达式限制只能输入数字和英文：
+ * onkeyup="value=value.replace(/[\W]/g,'')"
+ * onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+ *
+ * */
+```
+
+
+
