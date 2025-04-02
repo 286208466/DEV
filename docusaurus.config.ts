@@ -15,6 +15,17 @@ const SETTINGS = {
         sidebarPath: require.resolve("./sidebars.js"),
       },
     ],
+    [
+      "@docusaurus/plugin-content-blog",
+      {
+        id: "blog_main",
+        path: "blog_main",
+        routeBasePath: "blog_main",
+        postsPerPage: 10,
+        blogSidebarTitle: "文章列表",
+        blogSidebarCount: "ALL",
+      },
+    ],
   ]
 }
 
