@@ -1,0 +1,89 @@
+一、经纬度转换为世界坐标
+
+```js
+//方法一
+Cesium.Cartesian3.fromDegrees(longitude, latitude, height, ellipsoid, result);
+//方法二
+var ellipsoid = viewer.scene.globe.ellipsoid;
+var cartographic = Cesium.Cartographic.fromDegrees(lng, lat, alt);
+var cartesian3 = ellipsoid.cartographicToCartesian(cartographic);
+//方法三
+/**
+ * WGS84坐标系转笛卡尔坐标系
+ * @param point
+ * @return {{x: *, y: *, z: *}}
+ * @constructor
+ */
+var WGS84_to_Cartesian3 = function (point) {
+  var car33 = Cesium.Cartesian3.fromDegrees(point.lng, point.lat, point.alt);
+  var x = car33.x;
+  var y = car33.y;
+  var z = car33.z;
+  return { x: x, y: y, z: z };
+};
+```
+
+二、世界坐标转换为经纬度
+
+```js
+//方法一
+var ellipsoid = viewer.scene.globe.ellipsoid;
+var cartesian3 = new Cesium.cartesian3(x, y, z);
+var cartographic = ellipsoid.cartesianToCartographic(cartesian3);
+var lat = Cesium.Math.toDegrees(cartograhphic.latitude);
+var lng = Cesium.Math.toDegrees(cartograhpinc.longitude);
+var alt = cartographic.height;
+
+//方法二
+Cesium.Cartographic.fromCartesian(cartesian, ellipsoid, result);
+
+//方法三
+/**
+ * 笛卡尔坐标系转WGS84坐标系
+ * @param point
+ * @return {{lat: *, lng: *, alt: *}}
+ * @constructor
+ */
+var Cartesian3_to_WGS84 = function (point) {
+  var cartesian33 = new Cesium.Cartesian3(point.x, point.y, point.z);
+  var cartographic = Cesium.Cartographic.fromCartesian(cartesian33);
+  var lat = Cesium.Math.toDegrees(cartographic.latitude);
+  var lng = Cesium.Math.toDegrees(cartographic.longitude);
+  var alt = cartographic.height;
+  return { lng: lng, lat: lat, alt: alt };
+};
+```
+
+三、屏幕坐标和世界坐标相互转换
+
+```js
+//方法一
+//3D模式Cesium屏幕坐标转世界坐标
+var pick1 = new Cesium.Cartesian2(0, 0);
+var cartesian = viewer.scene.globe.pick(
+  viewer.camera.getPickRay(pick1),
+  viewer.scene
+);
+
+//方法二
+Cesium.SceneTransforms.wgs84ToWindowCoordinates(scene, Cartesian3);
+```
+
+### Cesium 屏幕坐标转世界坐标
+
+3D 模式 Cesium 屏幕坐标转世界坐标
+
+```js
+var pick1 = new Cesium.Cartesian2(0, 0);
+var cartesian = viewer.scene.globe.pick(
+  viewer.camera.getPickRay(pick1),
+  viewer.scene
+);
+```
+
+2D 模式 Cesium 屏幕坐标转世界坐标
+
+```js
+var pick = new Cesium.Cartesian2(0, 0);
+var cartesian = viewer.camera.pickEllipsoid(pick, viewer.scene.globe.ellipsoid);
+```

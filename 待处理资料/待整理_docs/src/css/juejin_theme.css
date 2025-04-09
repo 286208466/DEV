@@ -1,0 +1,198 @@
+/*
+掘金博客详情页参考样式
+*/
+
+/*
+  博客样式
+*/
+html[data-theme="light"] .blog-wrapper .markdown {
+  font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell,
+    Noto Sans, sans-serif, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", Arial;
+}
+html[data-theme="light"] .blog-wrapper .markdown h1,
+html[data-theme="light"] .blog-wrapper .markdown h2,
+html[data-theme="light"] .blog-wrapper .markdown h3,
+html[data-theme="light"] .blog-wrapper .markdown h4,
+html[data-theme="light"] .blog-wrapper .markdown h5,
+html[data-theme="light"] .blog-wrapper .markdown h6 {
+  color: #005bb7;
+  position: relative;
+  /* padding-left: 16px; */
+  padding-right: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ececec;
+}
+/* html[data-theme="light"] .blog-wrapper .markdown h1::after,
+html[data-theme="light"] .blog-wrapper .markdown h2::after,
+html[data-theme="light"] .blog-wrapper .markdown h3::after,
+html[data-theme="light"] .blog-wrapper .markdown h4::after,
+html[data-theme="light"] .blog-wrapper .markdown h5::after,
+html[data-theme="light"] .blog-wrapper .markdown h6::after {
+  content: "」";
+  position: absolute;
+  top: 6px;
+  right: auto;
+}
+html[data-theme="light"] .blog-wrapper .markdown h1::before,
+html[data-theme="light"] .blog-wrapper .markdown h2::before,
+html[data-theme="light"] .blog-wrapper .markdown h3::before,
+html[data-theme="light"] .blog-wrapper .markdown h4::before,
+html[data-theme="light"] .blog-wrapper .markdown h5::before,
+html[data-theme="light"] .blog-wrapper .markdown h6::before {
+  content: "「";
+  position: absolute;
+  top: -6px;
+  left: -10px;
+} */
+html[data-theme="light"] .blog-wrapper header h1 {
+  color: #252933;
+}
+html[data-theme="light"] .blog-wrapper blockquote {
+  color: rgb(53, 53, 53);
+  border-left: 4px solid #2196f3;
+  background-color: #f0fdff;
+  padding: 1px 20px;
+  margin: 22px 0;
+  font-size: 15px;
+}
+html[data-theme="light"] .blog-wrapper blockquote p {
+  margin: 10px 0;
+}
+html[data-theme="light"] .blog-wrapper .markdown strong {
+  color: #252933;
+}
+html[data-theme="light"] .blog-wrapper .table-of-contents__left-border {
+  border-left: none;
+  background: #fff;
+  padding-left: 0;
+  /* border-radius: 4px; */
+}
+html[data-theme="light"] .blog-wrapper .table-of-contents__link:hover,
+html[data-theme="light"] .blog-wrapper .table-of-contents__link:hover code,
+html[data-theme="light"] .blog-wrapper .table-of-contents__link--active,
+html[data-theme="light"] .blog-wrapper .table-of-contents__link--active code {
+  color: #007fff;
+  /* background-color: #f7f8fa; */
+}
+html[data-theme="light"] .blog-wrapper .table-of-contents__link {
+  padding: 10px 8px;
+  line-height: 22px;
+  font-size: 14px;
+  position: relative;
+}
+html[data-theme="light"] .blog-wrapper aside + main {
+  background: #fff;
+  padding-top: 2.667rem;
+  padding-bottom: 3.33rem;
+  padding-left: 2.67rem;
+  padding-right: 2.67rem;
+}
+html[data-theme="light"] .blog-wrapper {
+  background: #f0f1f1;
+}
+html[data-theme="light"]
+  .blog-wrapper
+  .tableOfContents_node_modules-\@docusaurus-theme-classic-lib-next-theme-TOC-styles-module {
+  /* width: 300px; */
+}
+html[data-theme="light"] .blog-wrapper pre {
+  font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+}
+html[data-theme="light"] .blog-wrapper code {
+  padding: 0.3em 0.4em;
+  font-size: 0.87em;
+  color: #c2185b;
+  background-color: #fff4f4;
+  border-radius: 2px;
+  border: none;
+}
+html[data-theme="light"] .blog-wrapper pre code {
+  font: inherit;
+  float: left;
+  min-width: 100%;
+  padding: 1rem;
+  background-color: transparent;
+  border: none;
+}
+html[data-theme="light"]
+  .blog-wrapper
+  .sidebarItemLinkActive_node_modules-\@docusaurus-theme-classic-lib-next-theme-BlogSidebar-styles-module {
+  color: #005bb7 !important;
+  font-size: 16px;
+}
+html[data-theme="light"] .blog-wrapper .table-of-contents__link--active::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0;
+  margin-top: 7px;
+  width: 4px;
+  height: 16px;
+  background: #1e80ff;
+  border-radius: 0 4px 4px 0;
+  left: -7px;
+}
+html[data-theme="light"]
+  .blog-wrapper
+  .tagRegular_node_modules-\@docusaurus-theme-classic-lib-next-theme-Tag-styles-module {
+  background-color: #eaf2ff;
+  color: #1e80ff;
+  border: none;
+  align-items: center;
+  border-radius: 4px;
+  display: flex;
+}
+html[data-theme="light"] .blog-wrapper {
+}
+html[data-theme="light"] .blog-wrapper {
+}
+html[data-theme="light"] .blog-wrapper {
+}
+html[data-theme="light"] .blog-wrapper {
+}
+
+
+
+
+
+/*  
+  文档样式
+*/
+html[data-theme="light"] .docs-wrapper .markdown {
+  font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell,
+    Noto Sans, sans-serif, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", Arial;
+}
+html[data-theme="light"] .docs-wrapper .markdown h1,
+html[data-theme="light"] .docs-wrapper .markdown h2,
+html[data-theme="light"] .docs-wrapper .markdown h3,
+html[data-theme="light"] .docs-wrapper .markdown h4,
+html[data-theme="light"] .docs-wrapper .markdown h5,
+html[data-theme="light"] .docs-wrapper .markdown h6 {
+  color: #393939;
+  position: relative;
+  /* padding-left: 16px; */
+  padding-right: 10px;
+  padding-bottom: 10px;
+  /* border-bottom: 1px solid #ececec; */
+}
+html[data-theme="light"] .docs-wrapper .markdown h3 {
+  border-bottom: 1px solid #ececec;
+}
+html[data-theme="light"] .docs-wrapper code {
+  padding: 0.3em 0.4em;
+  font-size: 0.87em;
+  color: #c2185b;
+  background-color: #fff4f4;
+  border-radius: 2px;
+  border: none;
+}
+html[data-theme="light"] .docs-wrapper pre code {
+  font: inherit;
+  float: left;
+  min-width: 100%;
+  padding: 1rem;
+  background-color: transparent;
+  border: none;
+}

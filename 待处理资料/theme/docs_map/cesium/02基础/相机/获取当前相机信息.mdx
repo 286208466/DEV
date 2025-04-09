@@ -1,0 +1,19 @@
+```js
+var head = viewer.scene.camera.heading;
+var pitch = viewer.scene.camera.pitch;
+var roll = viewer.scene.camera.roll;
+var info = { head: head, pitch: pitch, roll: roll };
+// 获取位置 wgs84的地心坐标系，x,y坐标值以弧度来表示
+var position = viewer.scene.camera.positionCartographic; //with longitude and latitude expressed in radians and height in meters.
+
+//以下方式也可以获取相机位置只是返回的坐标系不一样
+// var position = viewer.scene.camera.position //cartesian3 空间直角坐标系
+// var ellipsoid = scene.globe.ellipsoid;
+// var position =ellipsoid.cartesianToCartographic(viewer.scene.camera.position)//
+// 弧度转经纬度
+var longitude = Cesium.Math.toDegrees(position.longitude).toFixed(6);
+var latitude = Cesium.Math.toDegrees(position.latitude).toFixed(6);
+var height = position.height;
+const resInfo = { lng: longitude, lat: latitude, h: height, mat: info };
+console.log(resInfo);
+```

@@ -1,0 +1,22 @@
+默认打包后，js 和 css 是全部混在一起的，对强迫症很难受
+```js
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        chunkFileNames: "static/js/[name]-[hash].js",
+        entryFileNames: "static/js/[name]-[hash].js",
+        assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+      },
+    },
+  },
+  },
+});
+
+
+```
+
+作者：sRect
+链接：https://juejin.cn/post/7028137821269393438
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

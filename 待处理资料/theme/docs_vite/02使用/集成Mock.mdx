@@ -1,0 +1,130 @@
+安装插件
+
+```js
+npm i mockjs -S
+
+npm i vite-plugin-mock cross-env -D
+```
+
+配置，vite.config.js
+
+```js
+import { viteMockServe } from "vite-plugin-mock";
+
+export default {
+  plugins: [viteMockServe({ supportTs: false })],
+};
+```
+
+设置环境变量，package.json
+
+```js
+{
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development vite",
+    "build": "vite build"
+  },
+}
+```
+
+编写 Mock 用例
+
+这里直接将根目录下的 mock 目录拷贝出来就行。
+
+mock/\_util.ts：里面封装的是数据请求结构类型。
+mock_createProductionServer.ts：用于配置生产环境动态 Mock 的 js 文件，文档中有说。
+其他的：都是 Mock 用例。每一个 js、ts。都要默认导出一个 MockMethod 类型的数组。每一项 MockMethod 就是拦截的一个方法。MockMethod 的 response 对应方法的 return 将会被 Mock 实例处理。也就是说，你可以在 return 的对象中使用 Mock 规则
+
+不过\_createProductionServer.ts 中使用了 Glob 导入。
+
+在根目录下新建两个文件:
+
+mock/demo/user.ts
+
+mock/\_createMockServer.ts
+
+```js
+//user.ts:
+import { MockMethod } from 'vite-plugin-mock';
+export default [
+  // mock userInfo
+  {
+    url: '/api/v1/userInfo',
+    timeout: 200,
+    method: 'get',
+    response: ({ body }) => {
+      console.log('body', body);
+      return {
+        code: 0,
+        message: 'OK',
+        data: {
+          userName: 'admin',
+          headThumb: 'http://xxx/avatars/profile.gif',
+        },
+      };
+    },
+  },
+] as MockMethod[];
+
+
+```
+
+```js
+//_createMockServer.ts：
+import { createProdMockServer } from "vite-plugin-mock/es/createProdMockServer";
+
+const modules = import.meta.globEager("./**/*.ts");
+
+const mockModules: any[] = [];
+Object.keys(modules).forEach((key) => {
+  if (key.includes("/_")) {
+    return;
+  }
+  mockModules.push(...modules[key].default);
+});
+
+/**
+ * 在生产环境中使用。 需要手动导入所有模块
+ */
+export function setupProdMockServer() {
+  createProdMockServer(mockModules);
+}
+```
+
+修改 tsconfig.json 配置的 include 属性就正常了：
+
+```js
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "mock/**/*.ts" //++ 新增
+  ]
+```
+
+配置使用 vite-plugin-mock
+
+```js
+import { viteMockServe } from 'vite-plugin-mock';
+
+export function configMockPlugin(isBuild: boolean) {
+  return viteMockServe({
+    // eslint-disable-next-line no-useless-escape
+    ignore: /^\_/,
+    mockPath: 'mock',
+    localEnabled: !isBuild,
+    prodEnabled: isBuild,
+    injectCode: `
+      import { setupProdMockServer } from '../mock/_createMockServer';
+
+      setupProdMockServer();
+      `,
+  });
+}
+
+作者：james
+链接：https://juejin.cn/post/6996176490148659231
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```

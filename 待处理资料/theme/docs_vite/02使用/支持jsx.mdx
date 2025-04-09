@@ -1,0 +1,37 @@
+vue3 中 jsx 支持需要引入插件：@vitejs/plugin-vue-jsx
+
+```js
+npm i @vitejs/plugin-vue-jsx -D
+```
+
+注册插件，vite.config.js
+
+```js
+import vueJsx from "@vitejs/plugin-vue-jsx";
+
+export default {
+  plugins: [vue(), vueJsx()],
+};
+```
+
+用法也有要求，改造一下 App.vue
+
+```js
+<!-- 1.标记为jsx -->
+<script setup lang="jsx">
+import { defineComponent } from "vue";
+import HelloWorld from "comps/HelloWorld.vue";
+import logo from "./assets/logo.png"
+
+// 2.用defineComponent定义组件且要导出
+export default defineComponent({
+  render: () => (
+    <>
+      <img alt="Vue logo" src={logo} />
+      <HelloWorld msg="Hello Vue 3 + Vite" />
+    </>
+  ),
+});
+</script>
+
+```

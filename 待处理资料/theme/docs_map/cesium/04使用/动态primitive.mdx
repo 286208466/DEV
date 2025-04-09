@@ -1,0 +1,209 @@
+```js
+function changeLinePrimitive(options) {
+  this.positions = options.positions;
+}
+
+changeLinePrimitive.prototype.getGeometry = function () {
+  return new Cesium.PolylineGeometry({
+    positions: this.positions,
+    height: 50,
+    width: 5,
+    vertexFormat:
+      Cesium.EllipsoidSurfaceAppearance.VERTEXchangeLinePrimitiveFORMAT,
+  });
+};
+changeLinePrimitive.prototype.update = function (
+  context,
+  frameState,
+  commandList
+) {
+  var geometry = this.getGeometry();
+  if (!geometry) {
+    return;
+  }
+
+  this._primitive = new Cesium.Primitive({
+    geometryInstances: new Cesium.GeometryInstance({
+      geometry: geometry,
+      id: "111",
+    }),
+    releaseGeometryInstances: false,
+    appearance: new Cesium.PolylineMaterialAppearance({
+      aboveGround: false,
+    }),
+    asynchronous: false,
+  });
+  var primitive = this._primitive;
+
+  primitive.update(context, frameState, commandList);
+};
+//调用
+var positionWord = [];
+positionWord.push(Cesium.Cartesian3.fromDegrees(110.2, 34.55, 0));
+positionWord.push(Cesium.Cartesian3.fromDegrees(115.2, 34.55, 0));
+positionWord.push(Cesium.Cartesian3.fromDegrees(115.2, 39.55, 0));
+var pr = new changeLinePrimitive({ positions: positionWord });
+console.log(pr);
+viewer.scene.primitives.add(pr);
+
+var editFlag = false;
+var moveFlag = false; //当点击的点是bill时，开始变动primitive
+var billEntity = []; //记录添加的折点entity
+var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+var dragId = -1;
+handler.setInputAction(function (movement) {
+  var pick = viewer.scene.pick(movement.position);
+  console.log(pick);
+  if (pick) {
+    //pick的是bill
+    if (pick.id != null && pick.id.name == "bill") {
+      console.log("相机锁定");
+      dragId = pick.id.id.split("-")[1];
+      moveFlag = true;
+      viewer.scene.screenSpaceCameraController.enableRotate = false; //锁定相机
+    } else {
+      editFlag = true;
+      var pos = pick.primitive.geometryInstances.geometry._positions;
+      //console.log(pick.primitive.geometryInstances.geometry._positions)
+      removeMarkEntity(billEntity);
+      billEntity = [];
+      addMark(pos);
+      viewer.scene.screenSpaceCameraController.enableRotate = false; //锁定相机
+      dragId = -1;
+    }
+  } else {
+    editFlag = false;
+    removeMarkEntity(billEntity);
+    billEntity = [];
+    dragId = -1;
+    //viewer.scene.screenSpaceCameraController.enableRotate = true;//锁定相机
+  }
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+handler.setInputAction(function (movement) {
+  let ray = viewer.camera.getPickRay(movement.endPosition);
+  let cartesian = viewer.scene.globe.pick(ray, viewer.scene);
+  if (moveFlag && dragId != -1) {
+    pr.positions[dragId] = cartesian;
+    // billEntity[dragId].position=new Cesium.CallbackProperty(function () {
+    //     return cartesian;
+    // }, false);//防止闪烁，在移动的过程)
+  }
+}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+function addMark(positions) {
+  var bill = {
+    show: true,
+    pixelOffset: new Cesium.Cartesian2(0, 0),
+    eyeOffset: new Cesium.Cartesian3(0.0, 0.0, 0.0),
+    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+    verticalOrigin: Cesium.VerticalOrigin.CENTER,
+    scale: 2.0,
+    image: "./sampledata/images/dragIcon.png",
+    color: new Cesium.Color(1.0, 1.0, 1.0, 1.0),
+  };
+  var entity;
+  positions.map((v, index) => {
+    console.log(index);
+    var cartesian3 = new Cesium.Cartesian3(v.x, v.y, v.z);
+    var cartographic =
+      viewer.scene.globe.ellipsoid.cartesianToCartographic(cartesian3);
+
+    var lat = Cesium.Math.toDegrees(cartographic.latitude);
+    var lng = Cesium.Math.toDegrees(cartographic.longitude);
+    var height = Cesium.Math.toDegrees(cartographic.height);
+
+    entity = viewer.entities.add({
+      position: Cesium.Cartesian3.fromDegrees(lng, lat, height),
+      billboard: bill,
+      name: "bill",
+      id: "bill-" + index,
+    });
+    billEntity.push(entity);
+  });
+}
+function removeMarkEntity(entities) {
+  entities.map((v) => {
+    viewer.entities.remove(v);
+  });
+}
+```
+
+原文链接：https://blog.csdn.net/A873054267/article/details/99621719
+
+
+### Cesium自定义Primitive
+
+https://blog.csdn.net/qq_40043761/article/details/122428092
+
+```js
+function CustomPolygonPrimtive (options) {
+    this.positions = options.positions
+    this.color = options.color
+ 
+    this._positions = undefined
+    this._color = new Cesium.Color(1, 0, 0, 1)
+}
+ 
+CustomPolygonPrimtive.prototype.getGeometry = function () {
+    return new Cesium.PolygonGeometry({
+        polygonHierarchy: new Cesium.PolygonHierarchy(this.positions),
+        perPositionHeight: true,
+        vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT
+    })
+}
+ 
+CustomPolygonPrimtive.prototype.getPrimitive = function () {
+    var geometry = this.getGeometry()
+    var instances = new Cesium.GeometryInstance({
+        geometry: geometry 
+    })
+ 
+    return new Primitive({
+        geometryInstances: instances,
+        appearance: new Cesium.EllipsoidSurfaceAppearance({
+            material: Cesium.Material.fromType('Color', {
+                color: this.color
+            }),
+            renderState: {
+                depthTest: {
+                    enabled: false
+                }
+            }
+        }),
+        asynchronous: false
+    })
+}
+ 
+CustomPolygonPrimtive.prototype.update = function (context, frameState, commandList) {
+    if (!(this.positions !== this._positions || this.color !== this._color)) {
+        if (this._primitive) {
+            this._primitive.update(context, frameState, commandList)
+        }
+        return;
+    }
+ 
+    this._positions = this.position;
+    this._color = this.color;
+ 
+    this._primitive = this._primitive && this._primitive.destroy()
+ 
+    this._primitive = this.getPrimitive()
+ 
+    if (!this._primitive) return;
+ 
+    this._primitive.update(context, frameState, commandList)
+}
+ 
+CustomPolygonPrimtive.prototype.isDestroyed = function () {
+    return false
+ }
+ 
+CustomPolygonPrimtive.prototype.destroy = function () {
+     this._primitive = this._primitive && this._primitive.destroy()
+     return Cesium.destroyObject(this)
+ }
+ 
+//如何使用
+viewer.scene.primitives.add(new CustomPolygonPrimtive(options))
+ 
+```

@@ -1,0 +1,48 @@
+如何像webpack项目的html-webpack-plugin那样使用<%= htmlWebpackPlugin.options.title %>，这种方式动态注入变量，vite 中可以使用vite-plugin-html来完成。
+
+
+安装
+
+```js
+npm i vite-plugin-html -D
+```
+
+使用(比如不同环境下动态注入高德地图的key)
+
+vite.config.js配置文件
+
+```js
+import { minifyHtml, injectHtml } from "vite-plugin-html";
+
+const AMAP_KEY = "xxx";
+
+export default defineConfig({
+  plugins: [
+    injectHtml({
+      data: {
+        title: "hello",
+        // 高德地图
+        injectAMapScript: `<script src="https://webapi.amap.com/maps?v=1.4.15&key=${AMAP_KEY}"></script>`,
+      },
+    }),
+  ],
+});
+
+```
+
+index.html中使用 ejs 模板引擎动态注入
+
+```js
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%- title %></title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+    <%- injectAMapScript %>
+  </body>
+</html>
+
+```

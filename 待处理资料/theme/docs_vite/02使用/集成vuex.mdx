@@ -1,0 +1,40 @@
+安装 vuex
+
+```js
+npm i vuex
+```
+
+在 src 文件夹下面添加 store 文件夹，然后在文件夹下面添加 index.ts 文件
+
+```js
+import { createStore } from "vuex";
+
+export default createStore({
+  state: {
+    count: 0,
+  },
+  mutations: {
+    setCount(state, count) {
+      state.count = count;
+    },
+  },
+  actions: {
+    getCount({ commit }) {
+      commit("setCount", xxx);
+    },
+  },
+});
+```
+
+在 main.ts 中挂载
+
+```js
+import { createApp } from "vue";
+import App from "@/App.vue";
+import router from "@/router/index";
+import store from "@/store/index";
+
+const app = createApp(App);
+
+app.use(router).use(store).mount("#app");
+```

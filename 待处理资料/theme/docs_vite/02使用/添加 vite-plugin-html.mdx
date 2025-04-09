@@ -1,0 +1,87 @@
+vite-plugin-html： html 中 EJS 标签处理
+这个 插件可以在 在 index.html 中增加 EJS 标签，例如：
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%- title %></title>
+  <%- injectScript %>
+</head>
+
+```
+其中 title 和 injectScript 就是可以注入的数据
+
+安装
+
+```js
+npm install vite-plugin-html -D
+```
+
+在 src/plugins目录下新增： configHtmlPlugin.ts
+configHtmlPlugin.ts：
+
+```js
+import type { Plugin } from 'vite';
+
+ import html from 'vite-plugin-html';
+ 
+ import pkg from '../../package.json';
+
+
+ export function configHtmlPlugin(env: ViteEnv, isBuild: boolean) {
+   const { VITE_GLOB_APP_TITLE, VITE_PUBLIC_PATH } = env;
+ 
+   const path = VITE_PUBLIC_PATH.endsWith('/') ? VITE_PUBLIC_PATH : `${VITE_PUBLIC_PATH}/`;
+ 
+   const getAppConfigSrc = () => {
+     return `${path || '/'}_app.config.js?v=${pkg.version}-${new Date().getTime()}`;
+   };
+
+   const htmlPlugin: Plugin[] = html({
+     minify: isBuild,
+     inject: {
+       // Inject data into ejs template
+       injectData: {
+         title: VITE_GLOB_APP_TITLE,
+       },
+       // Embed the generated app.config.js file
+       tags: isBuild?[
+            {
+            tag: 'script',
+            attrs: {
+              src: getAppConfigSrc(),
+            },
+          },
+        ]:[]
+     },
+   });
+   return htmlPlugin;
+ }
+ 
+
+```
+
+然后在 vite.config.ts 文件中引入 configHtmlPlugin ，在 plugins 中使用
+
+```js
+import { configHtmlPlugin } from './src/plugins/configHtmlPlugin'
+```
+
+
+```js
+plugins:[
+  ...
+  configHtmlPlugin(viteEnv, isBuild),
+]
+```
+插件使用文档看这里：vite-plugin-html
+
+
+
+
+
+
+
+

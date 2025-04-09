@@ -1,0 +1,6 @@
+- 使用 React.memo 来缓存组件。
+- 使用 React.useMemo 缓存大量的计算。
+- 避免使用匿名函数。
+- 利用 React.lazy 和 React.Suspense 延迟加载不是立即需要的组件。
+- 尽量使用 CSS 而不是强制加载和卸载组件。
+- 使用 React.Fragment 避免添加额外的 DOM。

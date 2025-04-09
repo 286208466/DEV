@@ -1,0 +1,183 @@
+### setView
+
+三维球立即转到对应的视角和位置上。（无延迟）
+
+```js
+viewer.camera.setView({
+  // fromDegrees()方法，将经纬度和高程转换为世界坐标
+  destination: Cesium.Cartesian3.fromDegrees(117.48, 30.67, 15000.0),
+  orientation: {
+    // 指向
+    heading: Cesium.Math.toRadians(90, 0),
+    // 视角
+    pitch: Cesium.Math.toRadians(-90),
+    roll: 0.0,
+  },
+});
+```
+
+```js
+viewer.camera.setView({
+  destination: Cesium.Rectangle.fromDegrees(west, south, east, north),
+  orientation: {
+    heading: headingAngle,
+    pitch: pitchAngle,
+    roll: rollAngle,
+  },
+});
+```
+
+### flyTo
+
+通过转动的动画，三维球转到对应的视角和位置上。（有延迟）
+
+```js
+viewer.camera.flyTo({
+  // fromDegrees()方法，将经纬度和高程转换为世界坐标
+  destination: Cesium.Cartesian3.fromDegrees(117.48, 30.67, 15000.0),
+  orientation: {
+    // 指向
+    heading: Cesium.Math.toRadians(90, 0),
+    // 视角
+    pitch: Cesium.Math.toRadians(-90),
+    roll: 0.0,
+  },
+});
+```
+
+### flyHome
+
+将相机飞到主视图
+
+```js
+ // Cesium 相机系统 --flyHome   将相机飞到主视图
+loadFlyHome() {
+    this.loadView()
+    // 三秒后飞回主视图
+    setInterval(() => {
+        this.viewer.camera.flyHome(1)
+    }, 3000)
+}
+
+```
+
+### viewer.zoomTo
+
+异步设置摄像机以查看提供的一个或多个实体或数据源
+
+```js
+viewer.zoomTo(entity, {
+  heading: opt.heading,
+  pitch: opt.pitch,
+  range: opt.range,
+});
+//或者 viewer.zoomTo(viewer.entities)
+```
+
+```js
+// 引入点云并移动镜头
+var arr = viewer.scene.primitives.add(
+  new Cesium.Cesium3DTileset({
+    url: "点云json路径", //文件的路径
+  })
+);
+// 定位过去
+viewer.zoomTo(arr);
+```
+
+### viewBoundingSphere
+
+viewBoundingSphere 相机运动效果与 setView 类似，都是视域切换到目标点，没有视域飞行的过程，但是其设定方法与 setView 有所不同。
+
+viewBoundingSphere 函数必须设定模型的外接圆，viewBoundingSphere 这种方式适用于室内浏览，因为 家内空间较小，相机移动的幅度不易控制。
+
+viewBoundingSphere 可将相机固定在定点，视角绕点旋转 360"，实现定点环游。BoundingSphere 简单说就是物体的外接球。
+
+viewBoundingSphere 默认将视点置于外接球球心，可以设置偏称。
+
+以一个室内三维模型为例，加载数据完成后通过设定 viewBoundingSphere 实现定点环绕浏览
+
+```js
+var tileset = new Cesium.Cesium3DTileset({
+  url: "http://192.168.1.243:8088/data/point/demo01/tileset.json",
+});
+tileset.readyPromise.then(function (tileset) {
+  primitives.add(tileset);
+  viewer.scene.primitives.add(primitives);
+  viewer.camera.viewBoundingSphere(
+    tileset.boundingSphere,
+    new Cesium.HeadingPitchRange(-2.57, 0, 2)
+  );
+});
+```
+
+### viewer.flyTo
+
+空中飞行逐步切换视域，参数较少
+
+```js
+viewer
+  .flyTo(entity, {
+    offset: {
+      heading: opt.heading,
+      pitch: opt.pitch,
+      roll: opt.roll,
+    },
+    duration: opt.duration, // 设置飞行持续时间，默认会根据距离来计算
+  })
+  .then((e) => {
+    func & func();
+  });
+```
+
+### lookAt
+
+lookAt 函数也是将视角固定在所设置的目的地点上，用户可以通过鼠标任意旋转视角方向，但是不会改变其位置。
+
+```js
+const center = Cesium.Cartesian3.fromDegrees(110.2203, 24.3903, 350); // 目标位置
+const heading = 3.827657527141585; // 水平旋转  -正北方向
+const pitchs = -0.5138211629018499; // 上下旋转  --俯视朝向
+const range = 3.8; // 目标点高度
+viewer.camera.lookAt(
+  center,
+  new Cesium.HeadingPitchRange(heading, pitchs, range)
+);
+```
+
+### lookAtTransform
+
+锁定目标旋转拍摄
+
+```js
+// Lock camera to a point
+// 围绕拍摄的目标点
+var center = Cesium.Cartesian3.fromDegrees(110.2203, 24.3903, 230);
+var transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
+
+// 相机位置初始化
+viewer.scene.camera.lookAtTransform(
+  transform,
+  new Cesium.HeadingPitchRange(3.827657527141585, -0.5138211629018499, 200)
+);
+
+// 添加事件监听，围绕固定目标点旋转
+const move = function (clock) {
+  viewer.scene.camera.rotateRight(0.008);
+};
+viewer.clock.onTick.addEventListener(move);
+```
+
+停止拍摄时需要移除事件监听并解除锁定
+
+```js
+// 移除事件监听
+viewer.clock.onTick.removeEventListener(move)
+
+// 两种解除相机锁定目标的方式
+viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
+viewer.trackedEntity =undefined
+
+```
+
+

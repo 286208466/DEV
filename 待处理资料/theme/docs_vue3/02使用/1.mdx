@@ -1,0 +1,48 @@
+在vue2中可以使用options 来初始化数据，vue3没有这个属性
+
+```js
+// 首先可以定义一个方法 返回初始化数据
+const formData = () => {
+	return {
+            userName:'',
+            password:''
+	}
+}
+
+// 初始化页面展示数据
+const form = reactive(formData())
+
+// 重置数据为初始化状态
+Object.assign(form,formData())
+
+```
+
+
+Vue3.x 使用<script setup>如何设置组件name名称.mdx
+
+```html
+<script>
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "Test",
+});
+</script>
+
+<script setup>
+// ...
+</script>
+
+```
+
+nginx 线上部署，刷新后页面 404
+
+```js
+location / {
+    root   /usr/share/nginx/dist; # 服务默认启动目录
+    index  index.html index.htm; # 默认访问文件
++    try_files $uri /index.html; # 防止浏览器刷新后，页面404
+    client_max_body_size 100m;
+}
+
+```

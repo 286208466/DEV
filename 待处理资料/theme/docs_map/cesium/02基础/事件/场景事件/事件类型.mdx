@@ -1,0 +1,40 @@
+| 名称                            | 描述                              |
+| :------------------------------ | :-------------------------------- |
+| Camera.changed                  | 相机发生变化时触发                |
+| Camera.moveEnd                  | 相机停止移动时触发                |
+| Camera.moveStart                | 相机开始移动时触发                |
+| Scene.preUpdate                 | 场景更新之前触发                  |
+| Scene.postUpdate                | 场景更新之后立即触发              |
+| Scene.preRender                 | 场景更新之后渲染之前触发          |
+| Scene.postRender                | 场景渲染之后触发                  |
+| Scene.terrainProviderChanged    | 地形提供器发生变化时触发          |
+| Viewer.trackedEntityChanged     | entity 的属性发生变化时触发       |
+| Cesium3DTileset.allTilesLoaded  | 所有 3dtiles 数据加载完成以后触发 |
+| Cesium3DTileset.loadProgress    | 3dtiles 初始化加载过程中触发      |
+| Cesium3DTileset.tileFailed      | 3dtiles 瓦片加载失败时触发        |
+| Globe.imageryLayersUpdatedEvent | 地球加载图层更新时触发            |
+
+### 绑定和解绑
+
+```js
+// 需要回调的函数 
+function callbackFunc(event){
+    cosnole.log(event)
+}
+// 渲染之前执行
+viewer.scene.preRender.addEventListender(callbackFunc);
+viewer.scene.preRender.removeEventListender(callbackFunc);
+
+// 更新之前执行
+viewer.scene.preUpdate.addEventListender(callbackFunc);
+viewer.scene.preUpdate.removeEventListender(callbackFunc);
+
+// 实时渲染执行
+viewer.scene.postRender.addEventListender(callbackFunc);
+viewer.scene.postRender.removeEventListender(callbackFunc);
+
+// 实时更新执行
+viewer.scene.postUpdate.addEventListender(callbackFunc);
+viewer.scene.postUpdate.removeEventListender(callbackFunc);
+
+```

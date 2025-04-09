@@ -1,0 +1,101 @@
+# cesium中remove实体primitve之后报错：This object was destroyed, i.e., destroy() was called.
+
+问题描述： 点击某个事件可以控制primitve在场景中进行反复的添加删除操作，使用以下代码，
+
+```js
+function add(){
+    scene.primitives.add(primitive);
+}
+
+function deletes(){
+    scene.primitives.remove(primitive);
+}
+
+```
+
+在删除primitve之后再次添加会报错：
+
+DeveloperError: This object was destroyed, i.e., destroy() was called.
+
+在官方文档已经明确提出，调用remove函数，如果对象primitive被销毁，那么hi返回错误
+
+所以将代码更改为：
+
+```js
+var manager = new Cesium.PrimitiveCollection();
+manager.destroyPrimitives = false;
+scene.primitives.add(manager);
+
+function add(){
+	manager.add(primitive); 
+    scene.primitives.add(manager);
+}
+
+function deletes(){
+    manager.remove(primitive);
+}
+
+```
+
+primitiveCollection是primitive的管理员，将destroyPrimitives属性设置为false，意思就是每次对primitive操作的时候并不销毁它，仅仅将他从集合中删除，它本身还是存在的。
+
+但是以上代码会导致重复添加primitive，因为每次manager虽然移除了primitive，但是primitives并没有移除manager，所以最后会越积累越多，应该修改为以下代码：
+
+```js
+function add(){
+    manager.add(primitive); 
+	if(scene.primitives.length<=1){
+		scene.primitives.add(manager);
+	}
+}
+
+function deletes(){
+    manager.remove(primitive);
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

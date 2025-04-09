@@ -1,0 +1,145 @@
+绑定的事件需要移除，否则会一直监听
+
+方式一：方式一是每次都创建一个实例，可以多个共存且根据名字（变量比如：下面的handler）可以清除指定事件（推荐使用）。
+
+```js
+//方式1 推荐，每次都创建一个实例，可以多个共存且根据名字（变量比如：下面的handler）可以清除指定事件
+var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas); //获取地图对象
+handler.setInputAction(function (event) {
+  //设置监听方法
+  var height = viewer.camera.positionCartographic.height; //e.g 点击鼠标左键获取当前高度
+
+  var earthPosition = viewer.camera.pickEllipsoid(
+    event.position,
+    viewer.scene.globe.ellipsoid
+  );
+  if (Cesium.defined(earthPosition)) {
+    createPoint(earthPosition); //在点击位置添加一个点
+  }
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+// 方法1 移除方法
+handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK); //移除事件
+```
+
+方式二：方式二是直接在viewer实例上添加,清除事件会污染整个viewer实例且当前实例存在其它鼠标事件会一并清除（适合一键清除地图上事件）
+
+```js
+//方式2 直接在viewer实例上添加,清除事件会污染整个viewer实例且当前实例存在其它鼠标事件会一并清除（适合一键清除地图上事件）
+viewer.screenSpaceEventHandler.setInputAction(function (wheelment) {
+  var height = viewer.camera.positionCartographic.height; //e.g 点击鼠标左键获取当前高
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+// 方法2 移除方法
+viewer.screenSpaceEventHandler.removeInputAction(
+  Cesium.ScreenSpaceEventType.LEFT_CLICK
+);
+```
+
+### 示例
+
+**点击事件**
+
+```js
+let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+// 左键点击事件
+let leftclick = Cesium.ScreenSpaceEventType.LEFT_CLICK;
+viewer.screenSpaceEventHandler.removeInputAction(leftclick);
+handler.setInputAction((e) => {
+  let pickObj = viewer.scene.pick(e.position);
+  if (Cesium.defined(pickObj)) {
+    if (pickObj.id && pickObj.id instanceof Cesium.Entity) {
+      //点击entity
+      //properties: 实体自定义属性
+      /*properties: new Cesium.PropertyBag({
+                    type: "point",
+                    details: {}
+                })*/
+      if (pickObj.id.properties._type._value === "point") {
+        //当前实体的类型
+        //当前实体的属性信息
+        let trafficObj = pickObj.id.properties._details._value;
+        //参数传递，实体相关操作
+      }
+    }
+    if (pickObj.primitive instanceof Cesium.Primitive) {
+      //点击primitive
+      //primitive相关操作
+    }
+    if (pickObj.primitive instanceof Cesium.Model) {
+      //点击gltf/glb模型
+      //模型gltf/glb相关操作
+    }
+    if (pickObj instanceof Cesium.Cesium3DTileFeature) {
+      //点击3DTile
+      //3dTiles的子模型属性
+      let propertyNames = pickObj.getPropertyNames();
+      propertyNames.forEach((item) => {
+        console.log(item); //属性名
+        console.log(pickObj.getProperty(item)); //属性值
+      });
+    }
+    if (pickObj.getProperty && pickObj.getProperty("name")) {
+      //点击3DTile
+      //pickObj.getProperty("name"): 子模型名称
+      //模型相关操作
+    }
+
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
+    } else {
+      e.cancelBubble = true;
+    }
+    return;
+  }
+}, leftclick);
+
+//右键点击事件
+let rightclick = Cesium.ScreenSpaceEventType.RIGHT_CLICK;
+handler.removeInputAction(rightclick);
+handler.setInputAction((e) => {
+  // 从笛卡尔坐标获取经纬度
+  let position = viewer.scene.pickPosition(e.position);
+  let cartographicNew = Cesium.Cartographic.fromCartesian(position);
+  let longitude = Cesium.Math.toDegrees(cartographicNew.longitude);
+  let latitude = Cesium.Math.toDegrees(cartographicNew.latitude);
+  let height = cartographicNew.height;
+  console.log(longitude, latitude, height);
+
+  // 获取视角
+  let po = viewer.camera.positionWC;
+  let heading = viewer.camera.heading;
+  let roll = viewer.camera.roll;
+  let pitch = viewer.camera.pitch;
+  let data = JSON.stringify({
+    destination: po,
+    orientation: { pitch: pitch, heading: heading, roll: roll },
+  });
+  console.log(data);
+}, rightclick);
+```
+
+**鼠标事件**
+
+```js
+let mouseMove = Cesium.ScreenSpaceEventType.MOUSE_MOVE;
+let viewer = getViewer();
+viewer.screenSpaceEventHandler.removeInputAction(mouseMove);
+let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+handler.setInputAction((e) => {
+  let fea = viewer.scene.pick(e.endPosition);
+  if (fea) {
+    if (fea.id || fea.primitive) {
+      // 鼠标移入实体或模型
+      _self.$refs.map3d.style.cursor = "pointer";
+    }
+    if (fea.getProperty && fea.getProperty("name")) {
+      // 鼠标移入子模型
+      _self.$refs.map3d.style.cursor = "pointer";
+      //模型高亮等操作...
+    }
+  } else {
+    _self.$refs.map3d.style.cursor = "default";
+  }
+}, mouseMove);
+```

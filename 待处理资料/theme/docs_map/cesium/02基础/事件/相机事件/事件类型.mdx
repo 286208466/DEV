@@ -1,0 +1,85 @@
+### 相机事件类型
+
+| 名称        | 描述                                   |
+| :---------- | :------------------------------------- |
+| LEFT_DRAG   | 鼠标左键按住，然后移动鼠标并松开按键。 |
+| RIGHT_DRAG  | 鼠标右键按住，然后移动鼠标并松开按键。 |
+| MIDDLE_DRAG | 鼠标中键按住，然后移动鼠标并松开按键。 |
+| WHEEL       | 滚动鼠标中键滚轮。                     |
+| PINCH       | 双指触控屏幕。                         |
+
+### 默认操作模式
+
+| 操作              | 3D 视图    | 2.5D 视图 | 2D 视图    |
+| :---------------- | :--------- | :-------- | :--------- |
+| LEFT_DRAG         | 绕地球旋转 | 倾斜地球  | 地图上平移 |
+| RIGHT_DRAG        | 地图缩放   | 地图缩放  | 地图缩放   |
+| MIDDLE_DRAG       | 倾斜地球   | 倾斜地图  | 无         |
+| WHEEL             | 地图缩放   | 地图缩放  | 地图缩放   |
+| PINCH             | 倾斜地球   | 倾斜地图  | 无         |
+| CTRL + LEFT_DRAG  | 倾斜地球   | 倾斜地图  | 无         |
+| CTRL + RIGHT_DRAG | 倾斜地球   | 倾斜地图  | 无         |
+
+### 修改默认操作模式
+
+如果需要改变默认操作模式，可以在初始化地球之后，通过改变 ScreenSpaceCameraController 的几个属性来实现。
+
+| 名称                | 描述                               |
+| :------------------ | :--------------------------------- |
+| lookEventTypes      | 3D 视图、2.5D 视图改变相机观察方向 |
+| rotateEventTypes    | 3D 视图相机绕地球旋转              |
+| tiltEventTypes      | 3D 视图、2.5D 视图倾斜视角         |
+| translateEventTypes | 2.5D 视图、2D 视图地图上平移       |
+| zoomEventTypes      | 地图缩放                           |
+
+### 示例
+
+```js
+viewer.scene.screenSpaceCameraController.tiltEventTypes = [
+  Cesium.CameraEventType.RIGHT_DRAG,
+  Cesium.CameraEventType.PINCH,
+  {
+    eventType: Cesium.CameraEventType.LEFT_DRAG,
+    modifier: Cesium.KeyboardEventModifier.CTRL,
+  },
+  {
+    eventType: Cesium.CameraEventType.RIGHT_DRAG,
+    modifier: Cesium.KeyboardEventModifier.CTRL,
+  },
+];
+viewer.scene.screenSpaceCameraController.zoomEventTypes = [
+  Cesium.CameraEventType.MIDDLE_DRAG,
+  Cesium.CameraEventType.WHEEL,
+  Cesium.CameraEventType.PINCH,
+];
+```
+
+相机监听
+
+```js
+viewer.camera.changed.addEventListener(()=>{
+	// 当前高度
+	let height= viewer.camera.positionCartographic.height;
+	// 下面可以写其他的代码了
+});
+
+```
+
+移除监听
+
+```js
+let removeListener = viewer.camera.changed.addEventListener(()=>{
+    // 当前高度
+	let height= viewer.camera.positionCartographic.height;
+	// 下面可以写其他的代码了
+})
+ 
+removeListener() // 移除监听事件
+
+```
+
+Camera.changed：相机发生变化时触发
+
+Camera.moveEnd：相机停止移动时触发
+
+Camera.moveStart：相机开始移动时触发

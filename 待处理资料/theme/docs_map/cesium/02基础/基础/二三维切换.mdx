@@ -1,0 +1,33 @@
+场景状态模式有如下 4 中
+
+```js
+Cesium.SceneMode.COLUMBUS_VIEW; //1哥伦布视图
+Cesium.SceneMode.SCENE2D; //2维模式
+Cesium.SceneMode.SCENE3D; //3维模式
+Cesium.SceneMode.MORPHING; //0模式之间变换，例如二维到三维
+```
+
+首先在二三维功能相互切换的需求中，需要判断 cesium 当前是二维还是三维
+
+两种方式
+
+（1）使用 viewer.scene.mode 来判断当前的场景状态，是基于当前范围场景（但不会保留 hpr）的切换不会缩到全球范围。
+如通过点击事件来二三维切换
+
+```js
+document.getElementById("changeMap").addEventListener("click", () => {
+  viewer.scene.mode = viewer.scene.mode == 2 ? 3 : 2;
+});
+```
+
+（2）通过下面的方法来切换，会缩放到全球范围。
+
+```js
+// 括号里的参数时用来控制经过多久开始变化
+viewer.scene.morphTo2D(1); //二维
+viewer.scene.morphTo3D(1); //三维
+viewer.scene.morphToColumbusView(1); //哥伦布视图
+```
+
+在三维模式下，我们添加点或者添加线面的时候，会使用一些贴地的功能，但是使用贴地后，在进行切换。在二维地图上会看不到三维的点。这个主要是我们设置的贴的原因。只需要改变：
+heightReference: Cesium.HeightReference.NONE

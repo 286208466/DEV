@@ -1,0 +1,10 @@
+```js
+var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+//设置单击事件的处理句柄
+handler.setInputAction(function (movement) {
+  var pick = scene.pick(movement.position);
+  if (Cesium.defined(pick) && pick.id === "rectangle-1") {
+    console.log("矩形被选取");
+  }
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+```

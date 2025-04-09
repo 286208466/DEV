@@ -1,0 +1,67 @@
+安装axios
+
+```js
+npm i axios
+```
+
+添加全局的请求工具 在src下新建一个utils文件夹，文件夹下面添加一个http.ts文件
+
+```js
+import Axios from "axios"
+import { ElMessage } from "element-plus"
+
+const BASE_URL = ''; //请求接口url 如果不配置 则默认访问链接地址
+const TIME_OUT = ''; // 接口超时时间
+const instance = Axios.create({
+	baseURL:BASE_URL,
+	TIME_OUT:TIME_OUT
+})
+
+// 可以添加一个axios的全局配置
+instance.defaults.headers.post = {
+		"Content-Type":'application/x-www-form-urlencoded'
+}
+
+// 添加请求拦截器
+instance.interceptors.request.use((config) => {
+        // 可以在此处添加一些共有的请求拦截
+        ...
+	return config
+},(error) => {
+	return Promise.reject(error);
+})
+
+// 添加响应拦截器
+instance.interceptors.response.use((response)=>{
+	const res = response.data;
+	// 在此处添加一些响应拦截
+	 ...
+},(error)=>{
+	return Promise.reject(error);
+})
+
+export default instance;
+
+```
+
+使用axios 在src下新建一个API的文件夹，在文件夹下添加user.ts 文件
+```js
+import $http from '@/utils/http';
+
+// 添加用户登录请求 data如果约定好可以添加ts 接口类型
+export const userLogin = (data:any) => {
+	return $http({
+               url:'xxx',
+               method:'post',
+               data
+	})
+}
+
+```
+
+在需要使用这个接口的页面进行引入即可 例如在login.vue中
+```js
+<script lang="ts">
+	import { userLogin } from "@/api/user"
+</script> 
+```

@@ -1,0 +1,15 @@
+
+```js
+export default defineConfig({
+  build: {
+    // 生产环境移除console
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+  },
+});
+
+```

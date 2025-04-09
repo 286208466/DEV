@@ -1,0 +1,66 @@
+在配置文件中直接使用import.meta.env.xxx这样读取是报错的，不过有了上面的异步配置，读取env变量就方便了，我们可以直接使用fs直接获取
+
+.env文件
+
+```
+# PROXY_URL
+VITE_PROXY_URL=http://xxxxxx/
+# DBPATH_ENV
+DBPATH_ENV=XXXX
+```
+
+vite.config.js文件
+
+```js
+const fs = require("fs");
+const path = require("path");
+const { promisify } = require("util");
+const fsState = promisify(fs.stat);
+const readFile = promisify(fs.readFile);
+
+// 定义一个函数，读取.env文件中的内容
+async function getEnvConfig(vite_env_key) {
+  const envFilePath = path.resolve(__dirname, "./.env");
+  const [notExistEnvFile, existEnvFile] = await fsState(envFilePath)
+    .then((data) => [null, data])
+    .catch((e) => [e, null]);
+
+  if (notExistEnvFile || existEnvFile.size <= 0) return;
+
+  const envContent = await readFile(envFilePath, "utf8");
+
+  if (!envContent) return;
+
+  const envContentArr = envContent
+    .split("\n")
+    .filter((str) => !str.startsWith("#")) // 过滤掉注释行
+    .filter(Boolean);
+
+  const resultKey = envContentArr.find((item) => item.includes(vite_env_key));
+
+  return resultKey ? resultKey.split("=")[1] : null;
+}
+
+const resolveConf = async () => {
+  // 读取 .env 文件中的VITE_PROXY_URL的值
+  const PROXY_URL = await getEnvConfig("VITE_PROXY_URL");
+
+  return {
+    server: {
+      host: "0.0.0.0",
+      port: 3000,
+      open: true,
+      proxy: {
+        "/api": {
+          target: PROXY_URL,
+          changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
+  };
+};
+
+export default defineConfig(resolveConf());
+
+```

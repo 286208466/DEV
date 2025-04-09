@@ -1,0 +1,104 @@
+在项目中可以通过 import.meta.env 来获取到 .env.*文件中的环境变量
+
+但是 import.meta.env 在 vite.config.ts 配置文件中使用不了
+
+这里先在 vite.config.ts 中拿到环境变量参数
+
+修改 .env.development 文件:
+
+```
+VITE_PORT = 60001
+
+VITE_USE_MOCK = true
+
+VITE_GLOB_APP_TITLE = Vue3-ElementPlus-Vite2
+
+VITE_GLOB_API_URL = /basic-api
+
+VITE_PUBLIC_PATH = /
+
+VITE_BUILD_COMPRESS = 'none'
+
+VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE = false
+
+```
+
+.env.production 文件 后面同 .env.development文件做相应修改
+
+新增 src/utils/env.ts 文件 处理环境变量
+env.ts：
+
+```js
+export function wrapperEnv(envConf: Recordable): ViteEnv {
+  const ret: any = {};
+  for (const envName of Object.keys(envConf)) {
+    let realName = envConf[envName].replace(/\\n/g, '\n');
+    realName = realName === 'true' ? true : realName === 'false' ? false : realName;
+
+    if (envName === 'VITE_PORT') {
+      realName = Number(realName);
+    }
+    ret[envName] = realName;
+    process.env[envName] = realName;
+  }
+  return ret;
+}
+
+```
+
+在 vite.config.ts 文件中引入 wrapperEnv，并且从'vite'中引入 loadEnv ：
+
+import { wrapperEnv } from './src/utils/env'
+
+
+import { defineConfig, ConfigEnv, UserConfigExport, loadEnv } from 'vite'
+
+然后通过 loadEnv 和 wrapperEnv 最终可获取到环境变量的组成的对象 viteEnv ：
+
+```js
+export default ({ command, mode }: ConfigEnv): UserConfigExport => {
+  const isBuild = command === 'build'
+
+  const root = process.cwd() // 新增
+  const env = loadEnv(mode, root) // 新增
+  const viteEnv = wrapperEnv(env) // 新增
+  const {
+    VITE_PORT,
+    VITE_USE_MOCK,
+    VITE_BUILD_COMPRESS,
+    VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE
+  } = viteEnv // 新增
+
+  return defineConfig({
+    ......
+  })
+}
+
+
+```
+
+作者：tang丶有年
+链接：https://juejin.cn/post/6964255744170393614
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

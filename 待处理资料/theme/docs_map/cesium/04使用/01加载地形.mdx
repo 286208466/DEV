@@ -1,0 +1,25 @@
+### 在线加载地形
+
+```js
+var viewer = new Cesium.Viewer('cesiumContainer', {
+    terrainProvider : Cesium.createWorldTerrain();
+});
+```
+
+### 本地加载地形
+
+```js
+var viewer = new Cesium.Viewer("cesiumContainer", {
+  terrainProvider: new Cesium.CesiumTerrainProvider({
+    url: URL,
+  }),
+});
+```
+
+### 不加载地形
+
+```js
+var viewer = new Cesium.Viewer('cesiumContainer', {
+    terrainProvider : new Cesium.EllipsoidTerrainProvider();
+});
+```

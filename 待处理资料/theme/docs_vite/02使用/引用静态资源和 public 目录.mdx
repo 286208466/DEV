@@ -1,0 +1,36 @@
+引用静态资源
+
+在 vue 文件中template和style中以相对路径和绝对路径两种方式引用静态资源
+
+```html
+<template>
+  <!-- 相对路径 -->
+  <img src="./assets/img/test.png" />
+  <!-- 绝对路径 -->
+  <img src="/src/assets/img/test.png" />
+</template>
+
+<style scoped>
+#app {
+  background-image: url("./assets/img/test.png");
+}
+</style>
+
+```
+
+
+public 目录
+
+放在public目录下的文件应使用绝对路径引用，例如public/icon.png应该使用/icon.png
+public中的资源不应该被JavaScript文件引用
+
+```html
+<img src="/logo.png" />
+```
+
+
+
+
+
+
+

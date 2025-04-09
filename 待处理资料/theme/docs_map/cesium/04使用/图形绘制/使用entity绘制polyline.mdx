@@ -1,0 +1,106 @@
+```js
+		var redLine = viewer.entities.add({
+			// 贴在地面上 两点之间的直线距离
+			name: "Red_line on terrain",
+			polyline: {
+				positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+				width: 10,
+				// 不带箭头的线
+				// material: Cesium.Color.RED,
+				// 是否紧贴地面
+				clampToGround: true,
+				// 带箭头的线
+				material: new Cesium.PolylineArrowMaterialProperty(
+					Cesium.Color.RED
+				),
+			},
+		});
+
+		var greenRhumbLine = viewer.entities.add({
+			name: "Green rhumb line",
+			polyline: {
+				positions: Cesium.Cartesian3.fromDegreesArray([-75, 35, -125, 35]),
+				width: 5,
+				// arcType:多段线线段必须遵循的直线类型。
+				// NONE:不符合椭球表面的直线。
+				// GEODESIC:沿测地线路径。
+				// RHUMB:沿着直角或斜线路径。
+				arcType: Cesium.ArcType.RHUMB,
+				material: Cesium.Color.GREEN,
+			},
+		});
+
+		var glowingLine = viewer.entities.add({
+			name: "Glowing blue line on the surface",
+			polyline: {
+				positions: Cesium.Cartesian3.fromDegreesArray([-75, 37, -125, 37]),
+				width: 10,
+				material: new Cesium.PolylineGlowMaterialProperty({
+					// 指定辉光强度的数字属性，以总线宽的百分比表示。
+					glowPower: 0.7,
+					// 一种数字特性，指定渐变效果的强度，以占总线条长度的百分比表示。如果为1.0或更高，则不使用锥度效果。
+					taperPower: 0.6,
+					color: Cesium.Color.RED,
+				}),
+			},
+		});
+
+		var orangeOutlined = viewer.entities.add({
+			name: "Orange line with black outline at height and following the surface",
+			polyline: {
+				positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+					-75, 39, 250000,
+					-125, 39, 250000,
+				]),
+				width: 5,
+				// arcType: Cesium.ArcType.RHUMB,
+				// arcType: Cesium.ArcType.GEODESIC,
+				material: new Cesium.PolylineOutlineMaterialProperty({
+					color: Cesium.Color.ORANGE,
+					outlineWidth: 2,
+					outlineColor: Cesium.Color.BLACK,
+				}),
+			},
+		});
+
+		var purpleArrow = viewer.entities.add({
+			name: "Purple straight arrow at height",
+			polyline: {
+				positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+					-75, 43, 500000,
+					-125, 43, 500000,
+				]),
+				width: 10,
+				arcType: Cesium.ArcType.NONE,
+				// 带箭头的直线
+				// material: new Cesium.PolylineArrowMaterialProperty(
+				// 	Cesium.Color.PURPLE
+				// ),
+				// 不带箭头的直线
+				material: Cesium.Color.PURPLE
+
+			},
+		});
+
+		var dashedLine = viewer.entities.add({
+			name: "Blue dashed line",
+			polyline: {
+				positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+					-75, 45, 500000,
+					-125, 45, 500000,
+				]),
+				width: 4,
+				// 普通的直线
+				// PolylineGlowMaterialProperty
+				// 虚线
+				// PolylineDashMaterialProperty
+				// 多段线轮廓材质属性
+				// PolylineOutlineMaterialProperty
+				material: new Cesium.PolylineOutlineMaterialProperty({
+					color: Cesium.Color.CYAN,
+				}),
+			},
+		});
+
+		viewer.zoomTo(viewer.entities);`
+```

@@ -1,0 +1,45 @@
+安装vue-router
+
+```js
+npm i vue-router
+```
+
+在src目录下面添加router文件夹 然后在文件夹下添加index.ts文件
+
+```js
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('@/views/home.vue')
+  },
+  { path: '/', redirect: { name: 'Home' } }
+]
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+})
+
+export default router
+
+
+```
+
+当然在配置路由的时候也可以提取侧边栏组件作为公共的组件，配置方法跟vue2 集成路由方法一致，添加children属性
+
+
+在main.ts中挂载
+
+```js
+import { createApp } from 'vue'
+import App from '@/App.vue'
+import router from '@/router/index'
+
+const app = createApp(App)
+
+app.use(router).mount('#app')
+
+```

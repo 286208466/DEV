@@ -1,0 +1,90 @@
+### 使用同一个 Geometry 绘制了两个 Instance
+
+```js
+var viewer = new Cesium.Viewer("cesiumContainer");
+var scene = viewer.scene;
+
+var ellipsoidGeometry = new Cesium.EllipsoidGeometry({
+  vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT,
+  radii: new Cesium.Cartesian3(300000.0, 200000.0, 150000.0), //三轴半径
+});
+//下方的实例
+var cyanEllipsoidInstance = new Cesium.GeometryInstance({
+  geometry: ellipsoidGeometry,
+  modelMatrix: Cesium.Matrix4.multiplyByTranslation(
+    Cesium.Transforms.eastNorthUpToFixedFrame(
+      Cesium.Cartesian3.fromDegrees(-100.0, 40.0)
+    ),
+    new Cesium.Cartesian3(0.0, 0.0, 150000.0)
+  ),
+  attributes: {
+    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.CYAN),
+  },
+});
+//上方的实例
+var orangeEllipsoidInstance = new Cesium.GeometryInstance({
+  geometry: ellipsoidGeometry,
+  modelMatrix: Cesium.Matrix4.multiplyByTranslation(
+    Cesium.Transforms.eastNorthUpToFixedFrame(
+      Cesium.Cartesian3.fromDegrees(-100.0, 40.0)
+    ),
+    new Cesium.Cartesian3(0.0, 0.0, 450000.0)
+  ),
+  attributes: {
+    color: Cesium.ColorGeometryInstanceAttribute.fromColor(Cesium.Color.ORANGE),
+  },
+});
+
+scene.primitives.add(
+  new Cesium.Primitive({
+    geometryInstances: [cyanEllipsoidInstance, orangeEllipsoidInstance],
+    appearance: new Cesium.PerInstanceColorAppearance({
+      translucent: false,
+      closed: true,
+    }),
+  })
+);
+```
+
+### 更新单个GeometryInstance的属性
+
+在添加到Primitive中以后，仍然可以修改几何图形的某些属性：
+
+（1）颜色：如果Primitive设置了PerInstanceColorAppearance外观，则可以修改ColorGeometryInstanceAttribute类型的颜色
+
+（2）可见性：任何实例可以修改可见性
+
+```js
+var viewer = new Cesium.Viewer( 'cesiumContainer' );
+var scene = viewer.scene;
+ 
+var circleInstance = new Cesium.GeometryInstance( {
+    geometry : new Cesium.CircleGeometry( {
+        center : Cesium.Cartesian3.fromDegrees( -95.0, 43.0 ),
+        radius : 250000.0,
+        vertexFormat : Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
+    } ),
+    attributes : {
+        color : Cesium.ColorGeometryInstanceAttribute.fromColor( new Cesium.Color( 1.0, 0.0, 0.0, 0.5 ) ),
+        show : new Cesium.ShowGeometryInstanceAttribute( true ) //显示或者隐藏
+    },
+    id : 'circle'
+} );
+var primitive = new Cesium.Primitive( {
+    geometryInstances : circleInstance,
+    appearance : new Cesium.PerInstanceColorAppearance( {
+        translucent : false,
+        closed : true
+    } )
+} );
+scene.primitives.add( primitive );
+ 
+//定期修改颜色
+setInterval( function()
+{
+    var attributes = primitive.getGeometryInstanceAttributes( 'circle' );//获取某个实例的属性集
+    attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue( Cesium.Color.fromRandom( {
+        alpha : 1.0
+    } ) );
+}, 2000 );
+```

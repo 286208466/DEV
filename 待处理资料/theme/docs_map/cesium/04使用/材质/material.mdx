@@ -1,0 +1,85 @@
+材质设置
+
+```js
+// color
+polygon.appearance.material = Cesium.Material.fromType("color");
+
+// image
+polygon.appearance.material = Cesium.Material.fromType("Image");
+polygon.appearance.material.uniforms.image = "image.png";
+```
+
+完整的写法是如下
+
+```js
+// color
+polygon.appearance.material = new Cesium.Material({
+  fabric: {
+    type: "Color",
+    uniforms: {
+      color: new Cesium.Color(1.0, 0.0, 0.0, 0.5),
+    },
+  },
+});
+//// 修改颜色
+polygon.appearance.material.uniforms.color = Cesium.Color.WHITE;
+
+// image
+polygon.appearance.material = new Cesium.Material({
+  fabric: {
+    type: "Image",
+    uniforms: {
+      image: "image.png",
+    },
+  },
+});
+```
+
+### 内置材质（共23种）
+
+所有的内置材质可以简单地使用 Cesium.Material.fromType() 方法创建：
+
+```js
+polygon.appearance.material = Cesium.Material.fromType('Image')
+polygon.appearance.material.uniforms.image = 'image.png'
+```
+
+或者用全写法：
+```js
+polygon.appearance.material = new Cesium.Material({
+  fabric: {
+    type: 'Image',
+    uniforms: {
+      image: 'image.png'
+    }
+  }
+})
+```
+
+### 自定义材质
+
+使用 fabric 对象 + GLSL 代码和其他素材，就可以创建自定义材质。
+
+```js
+let fabric = {
+  // ...
+};
+
+polygon.appearance.material = new Cesium.Material({
+  fabric: fabric,
+});
+```
+
+```js
+let fabric = {
+   type : 'MyNewMaterial',
+   // ...其他 fabric JSON 的属性
+}
+polygon.appearance.material = new Cesium.Material({
+  fabric : fabric
+});
+// ... 然后在另一处需要这个 fabric
+anotherPolygon..appearance.material = Material.fromType('MyNewMaterial');
+
+
+```

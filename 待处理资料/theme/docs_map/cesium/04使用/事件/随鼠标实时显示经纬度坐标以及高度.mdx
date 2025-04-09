@@ -1,0 +1,17 @@
+```js
+//显示坐标
+var canvas = scene.canvas;
+var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+handler.setInputAction(function (movement) {
+    var cartesian = scene.camera.pickEllipsoid(movement.endPosition, ellipsoid);
+    var ellipsoid = scene.globe.ellipsoid;
+    if (cartesian) { //能获取，显示坐标
+        var cartographic = ellipsoid.cartesianToCartographic(cartesian);
+        var coords = '经度' + Cesium.Math.toDegrees(cartographic.longitude).toFixed(2) + ', ' + '纬度' + Cesium.Math.toDegrees(cartographic.latitude).toFixed(2) + '
+        ' + '高度' + Math.ceil(viewer.camera.positionCartographic.height);
+        document.getElementByIdx_x_x('coords').innerHTML = coords; document.getElementByIdx_x_x('coords').style.display = '';
+    } else { //不能获取不显示
+        document.getElementByIdx_x_x('coords').style.display = 'none';
+    }
+}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+```

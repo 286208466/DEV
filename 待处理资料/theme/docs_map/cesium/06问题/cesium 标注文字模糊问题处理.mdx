@@ -1,0 +1,32 @@
+
+
+http://javashuo.com/article/p-ajkmrboe-ee.html
+
+
+
+
+cesium下使用LabelGraphics给Entity显示文字的时候，会出现模糊问题
+采用如下方式解决：post
+
+一、关闭fxaa ;字体
+```js
+viewer.scene.postProcessStages.fxaa.enabled = false;
+```
+
+二、将字体大小设置大一倍，再用scale缩小
+```js
+label={
+    show:true,
+    showBackground:true,
+    backgroundColor:Cesium.Color.fromCssColorString('#000'),
+    scale:0.5, //这里很是巧妙的先将字体大小放大一倍在缩小一倍
+    font:'normal 32px MicroSoft YaHei',
+    text:`blabla~~`,
+    pixelOffset :new Cesium.Cartesian2(-120, -100),
+    horizontalOrigin:Cesium.HorizontalOrigin.LEFT
+}
+
+```
+
+
+https://blog.csdn.net/iamthek/article/details/83004006

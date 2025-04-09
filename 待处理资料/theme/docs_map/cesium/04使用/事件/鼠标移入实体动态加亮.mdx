@@ -1,0 +1,30 @@
+```js
+var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction(function (movement) {
+  var haveEn = viewer.scene.pick(movement.endPosition);
+  if (
+    viewer.scene.pickPositionSupported &&
+    Cesium.defined(haveEn) &&
+    haveEn.id !== " "
+  ) {
+    clearAlpha();
+    if (haveEn.id.polygon !== undefined) {
+      var haveEnsNow = haveEn.id.polygon._material._color.getValue();
+      haveEnsNow.alpha = 1;
+      haveEn.id.polygon._material._color.setValue(haveEnsNow);
+    }
+  } else if (haveEn == undefined) {
+    clearAlpha();
+  }
+}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+function clearAlpha() {
+  for (var i = 0; i < viewer.entities.values.length; i++) {
+    if (viewer.entities.values[i].name == "yanse") {
+      var haveEnsLast =
+        viewer.entities.values[i]._polygon._material._color.getValue();
+      haveEnsLast.alpha = 0.2;
+      viewer.entities.values[i]._polygon._material._color.setValue(haveEnsLast);
+    }
+  }
+}
+```

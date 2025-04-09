@@ -1,0 +1,61 @@
+### Cesium 环境 Primitives 加载广告牌出现 Cannot read property ‘globe‘ of undefined
+
+```js
+  AddBillboardPrimitives(id, data, image) {
+    let promise = Cesium.GeoJsonDataSource.load(data);
+    promise.then((ds) => {
+      let bs = this._viewer.scene.primitives.add(
+        new Cesium.BillboardCollection()
+      );
+      let entitys = ds.entities.values;
+      entitys.forEach((e) => {
+        //点坐标
+        let coor = e.position.getValue();
+        bs.add({
+          position: coor,
+          image: image,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        });
+      });
+    });
+  }
+```
+
+参数描述：
+
+data 是一个 geojson 数据，image 是一个图片 url
+
+当我设置每个广告牌（贴地）的"heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,"就会出现"Cannot read property 'globe' of undefined"
+
+解决方法：
+
+当使用"height reference property or will be depth tested"的时候必须传入
+
+修改后的代码：（设置 BillboardCollection 的 sence 参数）
+
+```js
+AddBillboardPrimitives(id, data, image) {
+    let promise = Cesium.GeoJsonDataSource.load(data);
+    promise.then((ds) => {
+      let bs = this._viewer.scene.primitives.add(
+        new Cesium.BillboardCollection({
+          scene: this._viewer.scene,
+        })
+      );
+      let entitys = ds.entities.values;
+      entitys.forEach((e) => {
+        //点坐标
+        let coor = e.position.getValue();
+        bs.add({
+          position: coor,
+          image: image,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        });
+      });
+    });
+  }
+```
+
+————————————————
+版权声明：本文为 CSDN 博主「mouka~」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_38370387/article/details/118695742

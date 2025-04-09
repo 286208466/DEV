@@ -1,0 +1,256 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Include the CesiumJS JavaScript and CSS files -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.96/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.96/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+    <div id="cesiumContainer" style="position:fixed;left:0px;top:0px;width:100%;height:100%;"></div>
+    <script>
+    // Your access token can be found at: https://cesium.com/ion/tokens.
+    // Replace `your_access_token` with your Cesium ion access token.
+
+    Cesium.Ion.defaultAccessToken = '你的Token; //替换成你的Token
+    Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(90, -20, 110, 90);
+
+    // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+        geocoder:true,//控制右上角第一个位置的查找工具
+        homeButton:true,//控制右上角第二个位置的home图标
+        sceneModePicker:true,//控制右上角第三个位置的选择视角模式，2d，3d
+        baseLayerPicker:true,//控制右上角第四个位置的图层选择器
+        navigationHelpButton:true,//控制右上角第五个位置的导航帮助按钮
+        animation:false,//控制左下角的动画器件
+        timeline:false,//控制下方时间线
+        fullscreenButton:false,//右下角全屏按钮
+        vrButton:false,//右下角vr按钮
+        shouldAnimate: true,//允许动画同步
+        infoBox : true, //不显示点击要素之后显示的信息
+        terrainProvider: Cesium.createWorldTerrain()
+    });
+
+    viewer._cesiumWidget._creditContainer.style.display="none";//取消版权信息
+
+    let polygon_height = viewer.entities.add({
+        name: "polygon_height",
+        polygon: {
+            show: true,
+            hierarchy: Cesium.Cartesian3.fromDegreesArray([
+                110.0,
+                30.0,
+                120.0,
+                30.0,
+                115.0,
+                40.0,
+            ]),
+            height: 100000,
+            material: Cesium.Color.CYAN.withAlpha(0.5),
+            outline: true,
+            outlineColor: Cesium.Color.BLACK,
+        }
+    })
+
+    // let polygon_clamp_to_ground = viewer.entities.add({
+    //     name: "polygon_clamp_to_ground",
+    //     polygon: {
+    //         show: true,
+    //         hierarchy: Cesium.Cartesian3.fromDegreesArray([
+    //             110.0,
+    //             30.0,
+    //             120.0,
+    //             30.0,
+    //             115.0,
+    //             40.0,
+    //         ]),
+    //         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+    //         material: Cesium.Color.CYAN.withAlpha(0.5),
+    //         outline: true,
+    //         outlineColor: Cesium.Color.BLACK,
+    //     }
+    // })
+
+    // let polygon_height_and_extruded_height = viewer.entities.add({
+    //     name: "polygon_height_and_extruded_height",
+    //     polygon: {
+    //         show: true,
+    //         hierarchy: Cesium.Cartesian3.fromDegreesArray([
+    //             110.0,
+    //             30.0,
+    //             120.0,
+    //             30.0,
+    //             115.0,
+    //             40.0,
+    //         ]),
+    //         height: 50000,
+    //         extrudedHeight: 100000,
+    //         // fill: false,
+    //         fill: true,
+    //         // material: Cesium.Color.CYAN.withAlpha(0.5),
+    //         material: Cesium.Color.CYAN,
+
+    //         outline: true,
+    //         outlineColor: Cesium.Color.BLACK,
+    //         outlineWidth: 5.0,
+
+    //         // closeTop: false,
+    //         // closeBottom: false,
+    //     }
+    // })
+
+    // let polygon_extruded_height = viewer.entities.add({
+    //     name: "polygon_extruded_height",
+    //     polygon: {
+    //         show: true,
+    //         hierarchy: Cesium.Cartesian3.fromDegreesArrayHeights([
+    //             110.0,
+    //             30.0,
+    //             100000,
+    //             120.0,
+    //             30.0,
+    //             100000,
+    //             115.0,
+    //             40.0,
+    //             300000,
+    //         ]),
+    //         // height: 50000,
+    //         extrudedHeight: -50000,
+    //         // fill: false,
+    //         material: Cesium.Color.CYAN.withAlpha(0.5),
+    //         // material: Cesium.Color.CYAN,
+
+    //         outline: true,
+    //         outlineColor: Cesium.Color.RED,
+    //         outlineWidth: 5.0,
+    //         perPositionHeight: true,
+    //     }
+    // })
+
+    // let polygon_per_position_height = viewer.entities.add({
+    //     name: "polygon_per_position_height",
+    //     polygon: {
+    //         show: true,
+    //         hierarchy: Cesium.Cartesian3.fromDegreesArrayHeights([
+    //             110.0,
+    //             41.0,
+    //             0.0,
+    //             115.0,
+    //             41.0,
+    //             500000.0,
+    //             120.0,
+    //             41.0,
+    //             0.0,
+    //         ]),
+    //         perPositionHeight: true,
+    //         // perPositionHeight: false,
+    //         material: Cesium.Color.CYAN.withAlpha(0.5),
+    //         outline: true,
+    //         outlineColor: Cesium.Color.BLACK,
+    //         outlineWidth: 10.0
+    //     }
+    // })
+
+    // let polygon_extruded_height_close_top = viewer.entities.add({
+    //     name: "polygon_extruded_height_close_top",
+    //     polygon: {
+    //         show: true,
+    //         hierarchy: Cesium.Cartesian3.fromDegreesArray([
+    //             110.0,
+    //             30.0,
+    //             120.0,
+    //             30.0,
+    //             115.0,
+    //             40.0,
+    //         ]),
+    //         height: 50000,
+    //         extrudedHeight: 100000,
+    //         material: Cesium.Color.CYAN,
+
+    //         outline: true,
+    //         // outlineColor: Cesium.Color.RED,
+    //         outlineWidth: 5.0,
+
+    //         closeTop: false,
+    //         closeBottom: false,
+    //         distanceDisplayCondition: new Cesium.DistanceDisplayCondition(100.0, 2000000.0)
+    //     }
+    // })
+
+    viewer.flyTo(viewer.entities);
+    </script>
+</body>
+</html>
+
+```
+
+### 绘制参数
+
+**show**
+
+是否显示，true为显示，false为不显示，默认为显示
+
+**hierarchy**
+
+多边形的坐标，为笛卡尔坐标系的地心坐标，可以有两种形式
+
+一种是带高程值的，如Cesium.Cartesian3.fromDegreesArrayHeights([第1个点的经纬度高程, 第2个点的经纬度高程, ...]) ，如果想要高程值起作用，需设置perPositionHeight: true
+
+另一种是不带高程的，只有经纬度，如Cesium.Cartesian3.fromDegreesArrayHeights([第1个点的经纬度, 第2个点的经纬度, ...])，此时的高程默认为0，可配合heightReference: Cesium.HeightReference.CLAMP_TO_GROUND参数让多边形贴地
+
+**height**
+
+多边形的高程，单位米，即便hierarchy设置了高程，只要perPositionHeight: false，多边形都会以height作为高程值，默认值为0，下图为设置了height: 100000的效果
+
+**heightReference**
+
+多边形的高程参考面，默认值为Cesium.HeightReference.NONE，表示使用绝对高程，如果想要多边形贴在地表，可设置为Cesium.HeightReference.CLAMP_TO_GROUND，下图为贴地的效果
+
+**extrudedHeight**
+
+多边形的外扩高程，默认值为0，当值不为0时，可形成多边形棱柱，即polygon可用来绘制几何体
+下图为height: 50000，extrudedHeight: 100000的效果，可以把height理解为棱柱的底面高程，extrudedHeight理解为顶面高程
+
+**material**
+
+多边形的样式，颜色也是其中的一种，目前可以先把这个参数当作设置颜色用，默认为白色，如上图中的多边形的颜色为青色，对应的值为Cesium.Color.CYAN，也可以使用RGBA的格式（A表示透明度），如红色可用new Cesium.Color(1, 0, 0, 1)表示（rgb的取值为0-1，如果是0-255的可以除以255进行归一化）。
+下图展示了半透明（A=0.5）颜色的显示效果，对应的值为new Cesium.Color(0, 0, 1, 0.5)
+
+**outline**
+
+是否显示多边形的边框，true为显示，false为不显示，默认为显示，下图为默认不显示边框的效果
+
+**outlineColor**
+
+多边形边框的颜色，默认为黑色，值的格式同material，下图为outlineColor: Cesium.Color.RED的显示效果
+
+**outlineWidth**
+
+多边形边框的宽度，此参数我修改后不起作用，原因还未搞清楚
+
+**perPositionHeight**
+
+多边形高程是否使用hierarchy中每个点的高程，true为使用，false为不使用，默认为不使用。使用该参数，我们可以自定义由不同高程的点构成的多边形，如下图我们可构建垂直地表的多边形
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

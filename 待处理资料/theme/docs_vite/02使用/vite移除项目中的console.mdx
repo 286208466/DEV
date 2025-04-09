@@ -1,0 +1,25 @@
+注：vite2.6.x 需要配置 “build.minify” 为 “terser”
+
+在 vue-cli 中移除 console，是要下载 babel-plugin-transform-remove-console 插件。
+但是在 vite 中已经内置了移除 console 的设置了，只需要配置一下就行了。
+
+```js
+//vite.config.js
+
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+
+export default defineConfig({
+  plugins: [vue()],
+  build: {
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        //生产环境时移除console
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+  },
+});
+```

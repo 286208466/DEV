@@ -1,0 +1,29 @@
+globe 的 pick 方法
+
+找到一个射线和渲染的球体表面之间的交集。结果为笛卡尔世界坐标。但是该方法忽略了地表加载的 3Dtiles 房屋模型数据
+
+```js
+let windowPosion = viewer.scene.globe.pick(
+  viewer.camera.getPickRay(e.position),
+  viewer.scene
+);
+```
+
+scene 的 pick 方法
+
+scene.pick 可以通过此方法获取到 pick 对象，通过 pick.id 即可拾取当前的 entity 对象，也可以获取 Cesium3DTileFeature 对象；
+
+```js
+let pickedObject = viewer.scene.pick(e.position); //用来拾取 Entity 和3Dtiles
+```
+
+scene.pickPosition
+
+通过 viewer.scene.pickPosition(e.position)获取，可以获取场中任意点击处的对应的世界坐标。
+
+```js
+let handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+handler.setInputAction((e) => {
+  console.log(handler); //方法内容 e.position 输出结果为  Cartesian2格式，
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+```

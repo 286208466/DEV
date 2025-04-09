@@ -1,0 +1,50 @@
+### 创建地图上的 entity 时，同时设置了 billboard 和 label，导致部分视角只显示 billboard 广告牌，而没有出现 label 标签文字。
+
+出现此问题的原因为，用来做背景的 billboard 图片遮挡住了文字。
+
+解决办法一：（相对有效）
+
+为 label 的配置，设置显示背景，并且设置一个背景颜色。
+
+此处由于 billboard 的 image 为一个黑色边框的纯白色图标，因此 label 的 backgroundColor 设置为了纯白色。可以依据情况，设置一个透明颜色的背景
+
+```js
+billboard: {
+    image: img,
+    width: 19,
+    height: 19
+},
+
+label: { //文字标签
+    text: imgName,
+    font: '500 30px Helvetica',// 15pt monospace
+    scale: 0.45,
+    style: Cesium.LabelStyle.FILL,
+    fillColor: Cesium.Color.BLACK,
+    pixelOffset: new Cesium.Cartesian2(1, -0), //偏移量
+    showBackground: true,                       //显示label的背景
+    backgroundColor: Cesium.Color.WHITE         //设置label的背景颜色
+},
+```
+
+解决办法二：
+
+更改广告牌billboard的颜色，使其具有一个透明度，让文字可以看到
+
+```js
+billboard: {
+    image: img,
+    width: 19,
+    height: 19,
+    color: new Cesium.Color(1.0,1.0,1.0,0.8)
+},
+
+label: { //文字标签
+    text: imgName,
+    font: '500 30px Helvetica',// 15pt monospace
+    scale: 0.45,
+    style: Cesium.LabelStyle.FILL,
+    fillColor: Cesium.Color.BLACK,
+    pixelOffset: new Cesium.Cartesian2(1, -0), //偏移量
+},
+```

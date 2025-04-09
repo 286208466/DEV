@@ -1,0 +1,28 @@
+Vite 在一个特殊的 import.meta.env 对象上暴露环境变量，Vue-CLI 是基于 webpack，它是在 process.env 上挂载的。
+
+此外，还有一个不同点是，原来的 vue.config.js 是能直接通过 process.env 拿到环境变量的，vite.config.js 却不能直接拿到，需要开发者自己调用 loadEnv 加载。
+
+还有 Vite 只暴露以 VITE* 开头的环境变量给客户端，Vue-CLI 中是 VUE_APP* 开头。
+
+对应的处理如下，通过 define 替换全局变量，这种方式目前来看是安全的。
+
+```js
+import { loadEnv } from "vite";
+
+const ENV_PREFIX = ["VITE_", "VUE_APP"];
+
+export default ({ mode, serverProxy }) => {
+  const envMap = loadEnv(mode, process.cwd(), ENV_PREFIX) || {};
+  const appDir = envMap.VUE_APP_DIR;
+
+  return defineConfig({
+    root: `${path.resolve(curDirname, `./src/${appDir}`)}/`,
+    define: {
+      "process.env": {
+        ...envMap,
+        NODE_ENV: mode,
+      },
+    },
+  });
+};
+```
